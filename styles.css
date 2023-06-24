@@ -23,3 +23,10 @@ h1 { /* Вписывается название тега, а дальше в {} 
     font-size: 22px; /* размер шрифта - 22 пикселя */
     font-family: Courier New; /* стиль шрифта */
 }
+
+.paragraph-4 {
+    font-style: oblique;
+    font-size: 24px;
+    text-shadow: 2px 3px 4px green;
+    text-align: center;
+}

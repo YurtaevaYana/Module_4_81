@@ -1,28 +1,25 @@
-body {
-    background: yellow;
+/* Так создаётся стилевое оформление страницы */
+h1 { /* Вписывается название тега, а дальше в {} атрибуты и значения */
+    background: red; /* задний фон */
 }
 
-h1 {
-    background: red;
-}
-
-.paragraph-1 {
-    background: blue;
-    font-size: 32pt;
-    color: white
+.paragraph-1 { /* здесь прописываем название_тега.класс_тега, но так как такой класс есть только у одного тега, его название можно не писать */
+    background: yellow; /* задний фон */
+    font-size: 32px; /* размер шрифта - 32 пикселя */
+    color: green /* цвет шрифта */
 }
 
 .paragraph-2 {
-    border: 10px solid red;
-    border-radius: 10px;
-    font-size: 24pt;
-    margin-bottom: 60pt;
-    padding-bottom: 60px;
-    padding-left: 20px;
+    border: 10px solid DarkMagenta; /* рамка вокруг текста - можно использовать любые цвета отсюда https://www.w3schools.com/cssref/css_colors.php */
+    border-radius: 10px; /* загрукление концов рамки */
+    font-size: 24pt; /* размер шрифта - 24 пункта (пункт больше, чем пиксель) */
+    margin-top: 60px; /* сколько отступаем снаружи рамки - в данном случае сверху*/
+    padding-bottom: 60pt; /* сколько отступаем внутри рамки - в данном случае внизу */
+    padding-left: 20px; /* сколько отступаем внутри рамки - в данном случае слева */
 }
 
 .paragraph-3 {
-    font-weight: bold;
-    font-size: 22px;
-    font-family: Courier New
+    font-weight: bold; /* шрифт - жирный */
+    font-size: 22px; /* размер шрифта - 22 пикселя */
+    font-family: Courier New; /* стиль шрифта */
 }

@@ -1,2 +1,3 @@
-## Lesson-41
-Code for the *first lesson* of the **4 module**
+## Hello there
+This is a repository for my beloved students. 
+You can find cheatsheets and files from lessons in the folders with the number of each lesson.

@@ -1,3 +1,5 @@
+<!-- На данном занятии мы создали файл с возможностью перемещения на другую страницу и интерактивными элементами -->
+<!-- Документация bootstrap - https://getbootstrap.com/docs/5.3/getting-started/introduction/-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,9 +8,11 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Page 1</title>
+    <!-- Ниже вместо файла css мы вставили ссылку на фреймворк bootstrap - оттуда будет браться визуал -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 <body>
+<!-- Элемент ниже (тег nav) - навигационный элемент, взят из документации bootstrap, там есть ещё варианты визуала -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Navbar</a>
@@ -18,31 +22,32 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#field1">Текст</a>
+          <a class="nav-link active" aria-current="page" href="#field1">Текст</a> <!-- В качестве ссылки для навигации можно использовать например id элементов страницы -->
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#field2">Чек-бокс</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled">Пароль</a>
+          <a class="nav-link" href="#field3">Пароль</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
-<a href="page2.html" target="_blank">Ссылка на Page 2</a>
-<form action="">
-    <label for="field1" class="lead">Простое текстовое поле</label>
-    <input id="field1" type="text" placeholder="Напишите текст здесь" class="form-control form-control-lg">
-    <input  id="field2" type="checkbox" class="form-check-input">
+<!-- Это - тег a, используется для добавления ссылки на веб-страницу, файл на компьютере или конкретное место в этом же файле -->
+<a href="page2.html" target="_blank">Ссылка на Page 2</a> <!-- target="_blank дает возможность открывать новую вкладку с указанным ресурсом при нажатии -->
+<form action=""> <!-- Ниже - виджеты, интерактивные элементы, задаются тегом input, подписи к ним - тегом label -->
+    <label for="field1" class="lead">Простое текстовое поле</label> <!-- параметр for указывает, к какому виджету прикреплена надпись - тогда она будет реагировать на нажатие и отсылать нас к этому виджету -->
+    <input id="field1" type="text" placeholder="Напишите текст здесь" class="form-control form-control-lg"> <!-- параметр id - то, как идентефицирует себя виджет, по нему мы приклепляем label и задаём навигацию -->
+    <input  id="field2" type="checkbox" class="form-check-input"> <!-- в параметре type помечаем, что это за объект -->
     <label for="field2" class="lead">Чек-бокс</label>
     <label for="field3" class="lead">Пароль</label>
-    <input id="field3" type="password" placeholder="Напишите пароль здесь" class="form-control form-control-sm">
-    <textarea class="form-control" aria-label="With textarea"></textarea>
-    <input type="button" class="btn btn-primary col-lg-2" value="Отправить форму">
+    <input id="field3" type="password" placeholder="Напишите пароль здесь" class="form-control form-control-sm"> <!-- внутри параметра class можно прописывать особенности визуала, они берутся из документации bootstrap -->
+    <textarea class="form-control" aria-label="With textarea"></textarea> <!-- Часть домашки - многострочный блок для текста -->
+    <input type="button" class="btn btn-primary col-lg-2" value="Отправить форму"> <!-- кнопка для отправки формы, параметр class также влияет на визуал, текст для него взят из документации bootstrap -->
 </form>
 </body>
 </html>

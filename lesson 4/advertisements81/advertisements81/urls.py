@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('app_advertisements81.urls')),
+    path('', include('app_advertisements81.urls')), # путь из файла urls.py папки app_advertisements81 добавлен к корневому пути
 ]

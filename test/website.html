@@ -1,0 +1,51 @@
+<!-- Создаём такой файл просто new -> название файла и расширение .html -> ставим в первой строке ! и нажимаем на Tab -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Занятие 42</title>  <!-- Название нашей страницы -->
+    <link rel="stylesheet" href="styles.css"> <!-- Здесь происходит связь с файлом со стилем оформления -->
+</head>
+<body>
+  <header>
+    <h1>My Website</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Заголовок 1 уровня</a></li>
+        <li><a href="#">Заголовок 2 уровня</a></li>
+        <li><a href="#">Заголовок 3 уровня</a></li>
+      </ul>
+    </nav>
+  </header>
+    <h1>Заголовок 1 уровня</h1> <!-- Такой заголовок может быть логически только один - как в статье в газете только один главный заголовок -->
+    <h2>Заголовок 2 уровня</h2> <!-- Заголовок поменьше -->
+    <h3>Заголовок 3 уровня</h3> <!-- И ещё поменьше -->
+    <!-- Ниже расположены параграфы текста - между ними всегда большие отступы, и каждый параграф с новой строки -->
+    <p class="paragraph-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate doloribus enim ex illo molestiae, nemo omnis repudiandae tempora veniam. Blanditiis doloremque eos facilis incidunt necessitatibus quam qui quibusdam velit.</p>
+    <p class="paragraph-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, aliquam aperiam asperiores consectetur corporis cupiditate debitis dignissimos eius expedita, facilis in molestiae molestias neque nostrum officiis omnis quaerat quasi, quisquam?</p>
+    <p class="paragraph-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, aliquam aperiam asperiores consectetur corporis cupiditate debitis dignissimos eius expedita, facilis in molestiae molestias neque nostrum officiis omnis quaerat quasi, quisquam?</p>
+    <p class="paragraph-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+    <!-- Ниже - цельный текст. Даже если он пишется в разных тегах span, это вс равно объединяется в единый пласт текста -->
+    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br/> A, aperiam consectetur dolores earum eveniet hic illo iusto maiores nobis non odio perspiciatis porro quia quibusdam recusandae tenetur veniam vero voluptatibus!</span>
+    <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi aspernatur at cum debitis dolorem, dolorum, eum fugit labore laborum magni neque provident, recusandae sint voluptatem. Ab iusto minima unde!</span>
+    <!-- Ниже - два блока текста в контейнерах div. Между ними нет таких отступов как у p, и они не идут сплошным текстом как span -->
+    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo in modi praesentium repellat? Cupiditate et itaque maxime, placeat sapiente unde velit? Consequuntur cum dolorem ducimus eius quisquam quos velit veniam.</div>
+    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cumque eligendi eum, explicabo ipsum maxime minima minus modi nemo pariatur quia sunt velit. Assumenda eveniet explicabo facere inventore nobis, tempore.</div>
+    <!-- Ниже - нумерованный список. Если сменить ol на ul, получится маркированный список, где вместо чисел стоят точечки -->
+    <ol>
+        <li>
+            Первый элемент
+        </li>
+        <li>
+            Второй элемент
+        </li>
+        <li>
+            Третий элемент
+        </li>
+    </ol>
+    <img src="pugs.jpg" alt="мопсы в косюмах из Игры Престолов" width="960" height="540">
+</body>
+</html>

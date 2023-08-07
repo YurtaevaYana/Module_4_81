@@ -55,7 +55,7 @@ python manage.py shell
 from app_advertisements81.models import Advertisements81
 
 теперь создаём переменные с содержанием, которое будем добавлять
-adv1 = Advertisements81(title='Заголовок №1', description='Описание №1', price = 100, auction = True)
+adv1 = Advertisements81(title='Заголовок №1', description='Описание №1', price = 100, auction = True, bu = False)
 Переменные created_time и updated_time заполнятся автоматически
 
 добавляем в таблицу:

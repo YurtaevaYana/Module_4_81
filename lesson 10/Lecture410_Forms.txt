@@ -1,0 +1,83 @@
+На этом занятии мы сделали возможным создание объявления с помощью формы на сайте. Давайте разберём по шагам, как это было.
+
+Сначала нам нужно сделать возможным переход на страницу заполнения формы:
+
+1. в приложении app_advertisements81 в файлике views.py добавляем
+def advertisement_post(request):
+	return render(request, 'advertisement-post.html')
+2. в том же приложении в файле urls.py в urlpatterns добавляем 
+path('advertisement-post/', advertisement_post, name='adv-post'),
+и не забываем импортировать advertisement_post из .views
+
+3. в папке templates нам нужны шаблоны страниц нашего сайта - 
+в шаблоне advertisement-post.html переделываем ссылки на страницы сайта, чтобы они обращались к страницам по имени и имели форму href="{% url 'имя-страницы' %}"  (чтобы проверить правильность, сравните с записью занятия)
+в остальных шаблонах меняем обращение к advertisement-post.html на вид href="{% url 'adv-post' %}" 
+
+Теперь при запуске сервера будет возможен переход на страницу заполнения формы.
+
+Чтобы эта страница визуально выглядела как все остальные наши страницы, шаблон advertisement-post.html оформляем так же, как уже готовые шаблоны, с наследованием от base.html.
+
+Теперь сделаем так, чтобы форма стала реально формой - умела принимать на вход что-то, а потом куда-то отдавала:
+
+1. в приложении app_advertisements81 создадим файл forms.py и пропишем там код:
+
+from django import forms
+
+class Advertisements81Form(forms.Form):
+    title = forms.CharField(max_length=64, widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-lg'}))
+    price = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg'}))
+    auction = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),required=False)
+    bu = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}), required=False)
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control form-control-lg'}))
+
+В данном случае я прописала сразу с элементами css, то есть визуала, чтобы поля отображались в том виде, в котором мы хотим. Однако этот стиль вы можете менять на своё усмотрение - css весь ваш, не обязательно делать поле просто большое (form-control-lg).
+
+2. в файле views.py добавим к функции код, чтобы получилось так
+def advertisement_post(request):
+    form = Advertisements81Form()
+    context = {'form' : form}
+    return render(request, 'advertisement-post.html', context)
+
+Так мы добавили форме связь с тем, что сделали в файле forms.py
+
+3. в самом шаблоне advertisements-post.html изменяем код в конце файла вот так:
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row mb-3 offset-sm-4">
+        <div class="col-6">
+          {{ form.as_p }}
+        </div>
+      <div class="row mb-3 offset-sm-2">
+        <div class="col">
+          <button type="submit" class="btn btn-success">Принять</button>
+        </div>
+      </div>
+      </div>
+    </form>
+  </div>
+
+Таким образом мы обратились к содержимому форм и показали его на странице.
+
+4. Последнее, что осталось - настроить сохранение записанного в форму в нашу базу данных и настроить переотправление пользователя на главную страницу после создания объявления.
+
+Вернёмся в views.py и изменим функцию так, чтобы было:
+def advertisement_post(request):
+    if request.method == "POST": # если нам что-то послали
+        form = Advertisements81Form(request.POST, request.FILES) # получаем присланный текст и файлы
+        if form.is_valid(): # если форма правильная
+            advertisement = Advertisements81(**form.cleaned_data) # обращаемся к базе данных, записываем туда объявление
+            advertisement.user = request.user # и информацию об отправителе - пользователе
+            advertisement.save() # сохраняем
+            url = reverse('main-page') # создаём ссылку на начальную страницу
+            return HttpResponseRedirect(url) # и отправляем пользователя по ней
+    else: # если нам ничего не посылали
+        form = Advertisements81Form() # просто смотрим на форму
+    context = {'form' : form}
+    return render(request, 'advertisement-post.html', context)
+При этом нужно импортировать следующие вещи:
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+Готово, можно пробовать создавать объявления!)

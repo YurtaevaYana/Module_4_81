@@ -1,0 +1,193 @@
+Это долгожданная шпаргалка по последним двум занятиям курса. Здесь я расскажу про налаживание процессов аутентификации и авторизации пользователя и доведение html-страничек "до ума".
+
+Сначала про 11 занятие.
+
+Когда пользователь вводит логин и пароль, по сути происходит не авторизация, а аутентификация - сверка этих значений и решение пустить пользователя в систему под этим логином. И уже затем сайт проводит авторизацию, чтобы понять, какие разделы системы можно открыть данному пользователю.
+
+Для аутентификации пользователя нам нужно создать новое приложение. В терминале вбиваем python manage.py startapp app_auth (последнее - название нашего приложения).
+
+В файле settings.py в переменную INSTALLED_APPS добавляем строку 'app_auth'.
+
+В файле urls.py той же папки - advertisements81 в переменную urlpatterns добавляем строку path('myauth/', include('app_auth.urls')),
+
+В приложении app_auth создадим файл urls.py. Заполним его сразу ссылками на все функции и названия, которые мы создадим и будем использовать:
+
+from django.urls import path
+from .views import profile_view, login_view, logout_view, register_view
+
+urlpatterns = [
+    path("profile/", profile_view, name="profile"),
+    path("login/", login_view, name="login"),
+    path("logout/", logout_view, name='logout'),
+    path("register/", register_view, name='register')
+]
+
+В папке templates все шаблоны разобьем на две папки - app_advertisements81 и app_auth. В первой папке пусть лежат файлы advertisement.html, advertisement-post.html, index.html, top-sellers.html. Второя папка будет содержать файлы login.html, profile.html, register.html. Файл base.html не относите ни к одной из этих папок. Теперь необходимо будет поменять ссылки на шаблоны html в файле views.py приложения app_advertisements81.
+
+Во всех шаблонах html теперь нужно с помощью имен ссылок (так же, как в файле urls.py) прописать обращение к страницам регистрации, входа, выхода и профиля. Чтобы сравнить, всё ли вы сделали, переходите в репозиторий гитхаб и находите там файлы. Также во всех новых шаблонах нужно оформить стиль по base.html и добавить обращение ко всем старым страницам.
+
+В файле views.py добавим следующие функции:
+
+сначала всё импортируем:
+from django.shortcuts import render, redirect, reverse
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from .forms import ExtendedUserCreationForm
+
+# функция для профиля
+@login_required(login_url=reverse_lazy('login')) # переход на страницу логина, если пользователь не авторизован (такую же строку нужно добавить над функцией создания объявления в другом файле views.py)
+def profile_view(request):
+    return render(request, 'app_auth/profile.html')
+
+# функция для логина (входа)
+def login_view(request):
+    redirect_url = reverse('profile') # когда авторизовался, будем перекидывать на страницу профиля
+    if request.method == "GET":
+        if request.user.is_authenticated: # если авторизован
+            return redirect(redirect_url) # перекидывает в профиль
+        else:
+            return render(request, 'app_auth/login.html') # если нет, то на страницу входа
+    if request.method == 'POST': # пользователь вводит логин и пароль, мы их берем (!!! на этом этапе в файле login.html важно указать name="username" в теге input, где id="username", и указать name="password" в теге input, где id="password"!!!)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password) # проводим аутентификацию по введенным параметрам
+    if user is not None: # если всё ок, то пользователя кидает на страницу профиля
+        login(request, user)
+        return redirect(redirect_url)
+    return render(request, 'app_auth/login.html', {"error": "Пользователь не найден"}) # если нет, то выдает ошибку
+
+В шаблон login.html после строки <div class="container"> добавим строки:
+  {% if error %}
+  <div class="col-sm-4 offset-4 w-25">
+    <div class="form-label bg-warning" style="margin: 10px 0px;">{{ error }}</div>
+  </div>
+  {% endif %}
+Так мы укажем поле для отображения ошибки
+
+А чтобы в профиле писалось имя пользователя, а не дефолтное, идём в шаблон profile.html и в конце в теге span прописываем:
+<span class="badge bg-primary">Сейчас вы находитесь на сайте под ником {{ user }}.</span>
+
+В файл views.py допишем функцию для выхода:
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('login'))
+
+Также нужно добавить возможность регистрации. Для этого в файле forms.py (надо создать) прописываем следующий код:
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+User = get_user_model() # модель пользователей сайта, чтобы туда записать нового
+
+class ExtendedUserCreationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) # просто визуал полей
+        self.fields['username'].widget.attrs['class'] = 'form-control form-control-lg'
+        self.fields['first_name'].widget.attrs['class'] = 'form-control form-control-lg'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control form-control-lg'
+        self.fields['password1'].widget.attrs['class'] = 'form-control form-control-lg'
+        self.fields['password2'].widget.attrs['class'] = 'form-control form-control-lg'
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'password1', 'password2'] # поля таблицы, которые будут в регистрационной форме
+
+Теперь нужно в файле views.py приложения app_auth прописать функцию для регистрации:
+
+def register_view(request):
+    if request.method == "POST":
+        form = ExtendedUserCreationForm(request.POST) # берем содержимое заполненной и отправленной формы
+        if form.is_valid():
+            user = form.save()
+            user = authenticate(username=user.username, password=request.POST['password1']) 
+            login(request, user=user) # если всё ок, то сохраняем информацию о пользователе и логиним его в систему, перекидываем на страницу профиля
+            return redirect(reverse('profile'))
+    else:
+        form = ExtendedUserCreationForm()
+    context = {
+        'form':form
+    }
+    return render(request, 'app_auth/register.html', context)
+
+
+Теперь по 12 занятию:
+
+В шаблоне index.py изменим содержимое со словом "Найти" таким образом, чтобы форма выглядела вот так:
+
+<form class="row g-3" method="get">
+      <div class="col-auto w-50">
+        <input name="query" value="{% if title %}{{ title }}{% endif %}" type="text" class="form-control">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-success mb-3">Найти</button>
+      </div>
+    </form>
+
+Теперь ссылка при написании чего-то в форме поиска будет дополняться. И мы сразу же дописали условие на то, что если некий title (он появится в функции ниже, это то, что пользователь ввел в форму поиска) существует, то он будет показан в форме.
+
+В файле views.py папки advertisements81 изменяем функцию index следующим образом:
+
+def index(request):
+    title = request.GET.get('query')# создание переменной title, смотри html-код выше
+    if title:
+        advertisements = Advertisements81.objects.filter(title__icontains=title) # если в заголовке есть такое слово (зависит от регистра)
+    else:
+        advertisements = Advertisements81.objects.all()
+    context = {'advertisements':advertisements,
+               'title':title,
+               }
+    return render(request, 'app_advertisements81/index.html', context)
+
+С поиском разобрались, теперь сделаем возможным переход внутрь каждого объявления.
+
+В той же папке в том же файле добавляем функцию показа страницы объявления 
+
+def advertisememnt_detail(request, pk): # здесь есть доп параметр pk - он указывает на id и номер объявления на странице 
+
+    advertisement = Advertisements81.objects.get(id=pk) # формируется связь с нашей таблицей с данными - затем вам самим нужно будет заполнить данными из этой переменной шаблон
+    context = {
+        'advertisement':advertisement
+    }
+    return render(request, 'app_advertisements81/advertisement.html', context)
+
+В файл urls.py той же папки добавляем строку path('advertisement/<int:pk>', advertisememnt_detail, name='adv-detail'),
+
+А в файле models.py дописываем функцию     
+def get_absolute_url(self):
+        return reverse ('adv-detail', kwargs={'pk':self.pk})
+
+Чтобы теперь по созданным ссылкам можно было переходить, в шаблоне index везде вместо advertisement.html прописываем {{ adv.get_absolute_url }} - теперь ссылка кликабельна.
+
+Внутри шаблона advertisement.html вам предстоит поменять содержимое так, чтобы оно отображало не что-то дефолтное, а динамическую информацию. При возникновении трудностей и вопросов пишите, помогу и подскажу.
+
+И последнее - сделаем осмысленной страницу с топом пользователей по числу объявлений.
+
+Изменяем функцию top-sellers так, чтобы было:
+
+def top_sellers(request):
+    users = User.objects.annotate(
+        adv_count = Count('advertisements81')
+    ).order_by('-adv_count')
+    context = {
+        'users':users
+    }
+    return render(request, 'app_advertisements81/top-sellers.html', context)
+
+Если какие-то фукнции не импортированы, интернет быстро подскажет, как их импортировать)
+
+В шаблоне top-sellers.html вместо всех объявлений оставляем только:
+
+<ul class="list-group list-group-numbered">
+    {% for user in users %}
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">{{ user }}
+          </div>
+        </div>
+        <span class="badge bg-primary rounded-pill">{{ user.adv_count }}</span>
+      </li>
+    {% endfor %}
+</ul>
+
+Если ещё остались вопросы, пишите в тг. Удачи вам с изучением интересных вам вещей!
